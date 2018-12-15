@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using UploadFilesServer.Context;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace UploadFilesServer
 {
@@ -56,6 +59,12 @@ namespace UploadFilesServer
 
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
+                RequestPath = new PathString("/StaticFiles")
+            });
             app.UseMvc();
         }
     }
