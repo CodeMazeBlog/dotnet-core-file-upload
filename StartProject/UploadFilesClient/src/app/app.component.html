@@ -1,0 +1,43 @@
+<article class="container container-fluid">
+  <section class="create" *ngIf="isCreate">
+    <h1>Create User</h1>
+    <form>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" [(ngModel)]="name">
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address" [(ngModel)]="address">
+      </div>
+      <div class="row">
+        <div class="offset-md-5 col-md-2">
+          <button type="button" class="btn btn-primary" (click)="onCreate()">Create </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="users" *ngIf="!isCreate">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{user.name}}</td>
+          <td>{{user.address}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="offset-md-10 col-md-2">
+        <button type="button" class="btn btn-primary" (click)="returnToCreate()">New User</button>
+      </div>
+    </div>
+  </section>
+</article>
+

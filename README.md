@@ -1,2 +1,2 @@
-# dotnet-core-file-upload
-This repository contains source code for the "Uploading Files With .NET Core Web API" article on the Code Maze blog
+# dotnet-core-file-upload Starter project
+##  https://code-maze.com/upload-files-dot-net-core-angular/
