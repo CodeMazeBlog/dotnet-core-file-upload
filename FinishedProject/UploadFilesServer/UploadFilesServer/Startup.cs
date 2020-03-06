@@ -1,20 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UploadFilesServer.Context;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
-using System.IO;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using UploadFilesServer.Context;
 
 namespace UploadFilesServer
 {
@@ -31,33 +32,36 @@ namespace UploadFilesServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UserContext>(opts =>
-                opts.UseSqlServer(Configuration["sqlconnection:connectionString"]));
+               opts.UseSqlServer(Configuration["sqlconnection:connectionString"]));
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                    .AllowAnyHeader());
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<FormOptions>(o => 
+            { 
+                o.ValueLengthLimit = int.MaxValue; 
+                o.MultipartBodyLengthLimit = int.MaxValue; 
+                o.MemoryBufferThreshold = int.MaxValue; 
+            });
+
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
+
             app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
@@ -65,7 +69,15 @@ namespace UploadFilesServer
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
                 RequestPath = new PathString("/StaticFiles")
             });
-            app.UseMvc();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
