@@ -1,4 +1,4 @@
-.create{
+.create {
     width: 700px;
     border: 1px solid rgb(206, 195, 195);;
     margin: 10px auto;
@@ -6,11 +6,11 @@
     box-shadow: 1px 1px 1px gray;
 }
 
-article section h1{
+article section h1 {
     text-align: center;
 }
 
-.users{
+.users {
     width: 900px;
     border: 1px solid rgb(206, 195, 195);;
     margin: 10px auto;

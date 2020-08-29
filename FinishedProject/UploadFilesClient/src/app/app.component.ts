@@ -14,8 +14,7 @@ export class AppComponent implements OnInit {
   public address: string;
   public user: UserToCreate;
   public users: User[] = [];
-  public response: {'dbPath': ''}; 
-
+  public response: {dbPath: ''};
 
   constructor(private http: HttpClient){}
 
@@ -46,6 +45,8 @@ export class AppComponent implements OnInit {
 
   public returnToCreate = () => {
     this.isCreate = true;
+    this.name = '';
+    this.address = '';
   }
 
   public uploadFinished = (event) => {
@@ -55,5 +56,4 @@ export class AppComponent implements OnInit {
   public createImgPath = (serverPath: string) => {
     return `https://localhost:5001/${serverPath}`;
   }
-
 }
