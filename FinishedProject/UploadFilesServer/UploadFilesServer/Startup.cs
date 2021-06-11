@@ -62,7 +62,6 @@ namespace UploadFilesServer
 
             app.UseHttpsRedirection();
 
-            app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -71,6 +70,7 @@ namespace UploadFilesServer
             });
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
