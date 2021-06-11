@@ -1,13 +1,4 @@
 ﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:51982",
-      "sslPort": 44379
-    }
-  },
   "profiles": {
     "UploadFilesServer": {
       "commandName": "Project",
