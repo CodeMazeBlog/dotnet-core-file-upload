@@ -1,7 +1,7 @@
 import { UserToCreate } from './_interfaces/userToCreate.model';
 import { User } from './_interfaces/user.model';
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +9,12 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public isCreate: boolean;
-  public name: string;
-  public address: string;
-  public user: UserToCreate;
-  public users: User[] = [];
-  public response: {dbPath: ''};
+  isCreate: boolean;
+  name: string;
+  address: string;
+  user: UserToCreate;
+  users: User[] = [];
+  response: {dbPath: ''};
 
   constructor(private http: HttpClient){}
 
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     this.isCreate = true;
   }
 
-  public onCreate = () => {
+  onCreate = () => {
     this.user = {
       name: this.name,
       address: this.address,
@@ -30,30 +30,34 @@ export class AppComponent implements OnInit {
     }
 
     this.http.post('https://localhost:5001/api/users', this.user)
-    .subscribe(res => {
-      this.getUsers();
-      this.isCreate = false;
+    .subscribe({
+      next: _ => {
+        this.getUsers();
+        this.isCreate = false;
+      },
+      error: (err: HttpErrorResponse) => console.log(err)
     });
   }
 
   private getUsers = () => {
     this.http.get('https://localhost:5001/api/users')
-    .subscribe(res => {
-      this.users = res as User[];
+    .subscribe({
+      next: (res) => this.users = res as User[],
+      error: (err: HttpErrorResponse) => console.log(err)
     });
   }
 
-  public returnToCreate = () => {
+  returnToCreate = () => {
     this.isCreate = true;
     this.name = '';
     this.address = '';
   }
 
-  public uploadFinished = (event) => {
-    this.response = event;
+  uploadFinished = (event) => { 
+    this.response = event; 
   }
 
-  public createImgPath = (serverPath: string) => {
-    return `https://localhost:5001/${serverPath}`;
+  public createImgPath = (serverPath: string) => { 
+    return `https://localhost:5001/${serverPath}`; 
   }
 }
