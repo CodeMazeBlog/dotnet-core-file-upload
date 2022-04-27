@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UploadFilesServer.Context;
 using UploadFilesServer.Models;
 
@@ -14,17 +12,14 @@ namespace UploadFilesServer.Controllers
     {
         private readonly UserContext _context;
 
-        public UsersController(UserContext context)
-        {
-            _context = context;
-        }
+        public UsersController(UserContext context) => _context = context;
 
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
             try
             {
-                var users = _context.Users.ToList();
+                var users = await _context.Users.ToListAsync();
 
                 return Ok(users);
             }
@@ -35,11 +30,11 @@ namespace UploadFilesServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody]User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             try
             {
-                if (user == null)
+                if (user is null)
                 {
                     return BadRequest("User object is null");
                 }
@@ -51,7 +46,7 @@ namespace UploadFilesServer.Controllers
 
                 user.Id = Guid.NewGuid();
                 _context.Add(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return StatusCode(201);
             }
